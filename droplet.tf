@@ -1,20 +1,28 @@
-data "digitalocean_droplet" "current" {
-  name = "devops42"
-}
-
-resource "digitalocean_ssh_key" "default" {
-  name       = "Digital Ocean Public Key"
-  public_key = file(var.ssh_public_key)
-}
-
 # Create a Digital Ocean Droplet
 resource "digitalocean_droplet" "blog" {
   image      = "ubuntu-20-04-x64"
   name       = "blog"
   region     = "nyc1"
   size       = "s-1vcpu-1gb"
-  ssh_keys   = [digitalocean_ssh_key.default.fingerprint]
   monitoring = true
+  ssh_keys = [
+    data.digitalocean_ssh_key.default.id
+  ]
+
+  provisioner "remote-exec" {
+    inline = ["sudo apt-get -qq install python -y"]
+
+    connection {
+      host        = self.ipv4_address
+      type        = "ssh"
+      user        = "root"
+      private_key = file(var.ssh_private_key)
+    }
+  }
+
+  provisioner "local-exec" {
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${var.ssh_private_key} playbook.yml"
+  }
 }
 
 resource "digitalocean_firewall" "blog" {
@@ -53,6 +61,6 @@ resource "digitalocean_firewall" "blog" {
 
 }
 
-output "blog_ip_address" {
+output "droplet_ip_address" {
   value = digitalocean_droplet.blog.ipv4_address
 }

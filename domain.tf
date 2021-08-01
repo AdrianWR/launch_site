@@ -8,8 +8,14 @@ resource "digitalocean_record" "ipv4" {
   domain = digitalocean_domain.blog.name
   type   = "A"
   name   = "@"
-  value  = data.digitalocean_droplet.current.ipv4_address
-  #value = digitalocean_droplet.blog.ipv4_address
+  value  = digitalocean_droplet.blog.ipv4_address
+}
+
+resource "digitalocean_record" "blog_address" {
+  domain = digitalocean_domain.blog.name
+  type   = "A"
+  name   = "new"
+  value  = digitalocean_droplet.blog.ipv4_address
 }
 
 resource "digitalocean_record" "www" {
