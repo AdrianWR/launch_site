@@ -2,12 +2,18 @@ data "digitalocean_droplet" "current" {
   name = "devops42"
 }
 
+resource "digitalocean_ssh_key" "default" {
+  name       = "Digital Ocean Public Key"
+  public_key = file(var.ssh_public_key)
+}
+
 # Create a Digital Ocean Droplet
 resource "digitalocean_droplet" "blog" {
   image      = "ubuntu-20-04-x64"
   name       = "blog"
   region     = "nyc1"
   size       = "s-1vcpu-1gb"
+  ssh_keys   = [digitalocean_ssh_key.default.fingerprint]
   monitoring = true
 }
 
