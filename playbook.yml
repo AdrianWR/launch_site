@@ -1,0 +1,25 @@
+---
+- hosts: all
+  become: yes
+  remote_user: root
+  vars_files:
+    - vars/default.yml
+
+  tasks:
+    - name: Install Prerequisites
+      apt: name={{ item }} update_cache=yes state=latest force_apt_get=yes
+      loop: [ 'aptitude' ]
+    
+    - name: Install Nginx
+      apt: name={{ item }} update_cache=yes state=latest
+      loop: [ 'nginx' ]
+    
+    - name: Start Nginx Service
+      service: name={{ item }} state=started enabled=yes
+      loop: [ 'nginx' ]
+  
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
