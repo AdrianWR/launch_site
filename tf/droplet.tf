@@ -8,21 +8,6 @@ resource "digitalocean_droplet" "blog" {
   ssh_keys = [
     data.digitalocean_ssh_key.default.id
   ]
-
-  provisioner "remote-exec" {
-    inline = ["sudo apt-get -qq install python -y"]
-
-    connection {
-      host        = self.ipv4_address
-      type        = "ssh"
-      user        = "root"
-      private_key = file(var.ssh_private_key)
-    }
-  }
-
-  provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${var.ssh_private_key} playbook.yml"
-  }
 }
 
 resource "digitalocean_firewall" "blog" {
