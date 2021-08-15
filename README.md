@@ -1,3 +1,5 @@
+[![DigitalOcean Referral Badge](https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%201.svg)](https://www.digitalocean.com/?refcode=346ac16c3b26&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge)
+
 # The Launch Site
 
 _The Launch Site_ is a simple community project, letting us provide the required infrastructure and configuration to create a simple blogging platform. So far, _The Launch Site_ let us wrap-up a complete Digital Ocean stack of resources, as described in the [Architecture](#Architecture) section.
